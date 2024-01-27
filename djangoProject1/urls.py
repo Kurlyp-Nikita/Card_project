@@ -23,5 +23,6 @@ urlpatterns = [
     path('', views.index, name='home'),
     path('cart/', views.toCart, name='toCart'),
     path('pay/<int:id>/', views.pay, name='pay'),
-    path('cart/del/<int:id>/', views.delete, name='delete')
+    path('cart/del/<int:id>/', views.delete, name='delete'),
+    path('cart/count/<str:num>/<int:id>', views.CartCount, name='count'),
 ]

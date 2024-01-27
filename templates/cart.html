@@ -1,40 +1,54 @@
-<!DOCTYPE html>
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Корзина</title>
-    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link rel="stylesheet" href="{% static 'carts.css' %}">
+    <script src="{% static '1.js' %}" defer></script>
+
 </head>
 <body>
     <h2>Корзина</h2>
-    <header>
+     <header>
         <a href="{% url 'home' %}">Главная</a>
         <a href="{% url 'toCart' %}">Корзина</a>
     </header>
     <table>
-        {% for one in  tovar %}
+        {% for one in tovar %}
             <tr>
                 <td>{{ one.tovar.name }}</td>
 
-                <td><a href="">
-                    <button> - </button>
+                <td><a href="{% url 'count' -1 one.id %}">
+                    <button class="minus">-</button>
                 </a></td>
 
                 <td>{{ one.count }} шт.</td>
 
-                <td><a href="">
-                    <button> + </button>
+                <td><a href="{% url 'count' 1 one.id %}">
+                    <button class="plus">+</button>
                 </a></td>
 
-                <td>{{ one.summa }} руб.</td>
+                <td>{{ one.tovar.price }} р.</td>
+                <td>{{ one.tovar.discount }} %</td>
+                <td>{{ one.summa }} р.</td>
+
                 <td><a href="{% url 'delete' one.id %}">
-                    <button>Удалить</button>
-                </a></td>
+                    <button class="delete">Удалить</button></a></td>
             </tr>
         {% endfor %}
     </table>
+    <h2>Итого: {{ total }} р.</h2>
+    <hr>
+    <button id="formbut">Оформить</button>
 
-    <h2>Итог {{ total }} руб.</h2>
+    <div id="formdiv" hidden>
+        <form action="" method="post" novalidate>
+            {% csrf_token %}
+            {{ formaorder }}
+            <input id="header" type="submit" value="Отправить">
+        </form>
+    </div>
+
 </body>
 </html>
