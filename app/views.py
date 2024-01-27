@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+import telebot
 from .forms import *
 
 
@@ -38,10 +39,11 @@ def toCart(req):
                 myzakaz += 'сумма, ' + str(one.summa) + ' '
                 myzakaz += 'скидка, ' + str(one.tovar.discount) + ' '
 
-            Order.objects.create(adress=k1, tel=k2, email=k3, total=total,
+            neworder = Order.objects.create(adress=k1, tel=k2, email=k3, total=total,
                                  myzakaz='заказ', user=req.user)
 
             items.delete()
+            telegram(neworder)
             return render(req, 'spasibo_pocupka.html')
 
     data = {'tovar': items, 'total': total, 'formaorder': forma}
@@ -82,3 +84,12 @@ def CartCount(req, num, id):
     item.save()
 
     return redirect('toCart')
+
+
+def telegram(neworder):
+    token = '6526265827:AAE67IBOXJ8-xHVbIlrhhRjgFGFL8kvA5BI'
+    chat = '1896507321'
+    bot = telebot.TeleBot(token)
+    message = neworder.user.username + ' ' + neworder.tel + ' ' + neworder.myzakaz
+    bot.send_message(chat, 'новый заказ')
+    bot.send_message(chat, message)
